@@ -7,22 +7,21 @@ const app = express();
 //MIDDLEWARE
 app.use(express.json());
 
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
-app.use((req,res,next)=>{
-  console.log('Hello from the custom middleware!');
+app.use((req, res, next) => {
+  console.log("Hello from the custom middleware!");
   next();
 });
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
-})
+});
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
-
 
 //ROUTE HANDLERS
 const getAllTours = (req, res) => {
@@ -37,18 +36,18 @@ const getAllTours = (req, res) => {
   });
 };
 const getTour = (req, res) => {
-  console.log(req.params);  // {id: '5'} -> example
+  console.log(req.params); // {id: '5'} -> example
 
-  const id = req.params.id*1;
-  const tour = tours.find(el => el.id === id);
+  const id = req.params.id * 1;
+  const tour = tours.find((el) => el.id === id);
 
-  if(id>tours.length){
+  if (id > tours.length) {
     return res.status(404).json({
       status: "fail",
-      message: "Invalid Id"
-    })
-  };
-  
+      message: "Invalid Id",
+    });
+  }
+
   res.status(200).json({
     status: "sucsess",
     data: {
@@ -76,34 +75,62 @@ const addTour = (req, res) => {
     }
   );
 };
-const updateTour = (req,res)=>{
-
-  if(req.params.id * 1>tours.length){
+const updateTour = (req, res) => {
+  if (req.params.id * 1 > tours.length) {
     return res.status(404).json({
       status: "fail",
-      message: "Invalid Id"
-    })
-  };
+      message: "Invalid Id",
+    });
+  }
 
   res.status(200).json({
     status: "sucsess",
-    data:{
-      tour: "<Updated tour here...>"
-    }
-  })
+    data: {
+      tour: "<Updated tour here...>",
+    },
+  });
 };
-const deleteTour = (req,res)=>{
-
-  if(req.params.id * 1>tours.length){
+const deleteTour = (req, res) => {
+  if (req.params.id * 1 > tours.length) {
     return res.status(404).json({
       status: "fail",
-      message: "Invalid Id"
-    })
-  };
+      message: "Invalid Id",
+    });
+  }
 
   res.status(204).json({
     status: "sucsess",
-    data: null
+    data: null,
+  });
+};
+const getAllUsers = (req,res)=>{
+  res.send(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+};
+const addUser = (req,res)=>{
+  res.send(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+};
+const getUser = (req,res)=>{
+  res.send(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+};
+const updateUser = (req,res)=>{
+  res.send(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
+  });
+};
+const deleteUser = (req,res)=>{
+  res.send(500).json({
+    status: 'error',
+    message: 'This route is not yet defined'
   });
 };
 
@@ -115,9 +142,27 @@ const deleteTour = (req,res)=>{
 // app.patch("/api/v1/tours/:id", updateTour);
 // app.delete("/api/v1/tours/:id", deleteTour);
 
-app.route("/api/v1/tours").get(getAllTours).post(addTour);
-app.route("/api/v1/tours/:id").get(getTour).patch(updateTour).delete(deleteTour);
+app
+  .route("/api/v1/tours")
+  .get(getAllTours)
+  .post(addTour);
 
+app
+  .route("/api/v1/tours/:id")
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
+
+app
+  .route("/api/v1/users")
+  .get(getAllUsers)
+  .post(addUser);
+
+app
+  .route("/api/v1/users/:id")
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
 
 //START SERVER
 const port = 3000;
