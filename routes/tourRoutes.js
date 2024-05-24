@@ -2,9 +2,9 @@ const express = require('express');
 const tourController = require('./../controllers/tourController');
 // const {getAllTours,addTour,getTour,deleteTour} = require('./../controllers/tourController');
 
-const app = express();
-
 const router = express.Router(); //created a new router and saved it in tourRouter
+
+router.param('id',tourController.checkId);
 
 router
   .route("/")
