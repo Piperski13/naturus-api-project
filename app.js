@@ -1,10 +1,13 @@
 const fs = require("fs");
 const express = require("express");
-const { json } = require("body-parser");
+const morgan = require("morgan");
 
 const app = express();
 
-app.use(express.json()); //middleware
+//MIDDLEWARE
+app.use(express.json());
+
+app.use(morgan('dev'));
 
 app.use((req,res,next)=>{
   console.log('Hello from the custom middleware!');
@@ -20,6 +23,8 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+
+//ROUTE HANDLERS
 const getAllTours = (req, res) => {
   console.log(req.requestTime);
   res.status(200).json({
@@ -102,15 +107,19 @@ const deleteTour = (req,res)=>{
   });
 };
 
+//ROUTES
+
 // app.get("/api/v1/tours", getAllTours);
 // app.post("/api/v1/tours", addTour);
 // app.get("/api/v1/tours/:id", getTour);
 // app.patch("/api/v1/tours/:id", updateTour);
 // app.delete("/api/v1/tours/:id", deleteTour);
 
-app.route("/api/v1/tours").get(getAllTours).get(addTour);
+app.route("/api/v1/tours").get(getAllTours).post(addTour);
 app.route("/api/v1/tours/:id").get(getTour).patch(updateTour).delete(deleteTour);
 
+
+//START SERVER
 const port = 3000;
 app.listen(port, () => {
   console.log(`Listening on the port:${port} for a request...`);
