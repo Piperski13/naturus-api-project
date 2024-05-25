@@ -9,7 +9,7 @@ const router = express.Router(); //created a new router and saved it in tourRout
 router
   .route("/")
   .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.addTour);
+  .post(tourController.addTour);
 
 router
   .route("/:id")
