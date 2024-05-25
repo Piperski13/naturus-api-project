@@ -1,28 +1,38 @@
 const Tour = require('./../models/tourModel')
 
-exports.getAllTours = (req, res) => {
-  console.log(req.requestTime);
-  res.status(200).json({
-    status: "sucsess",
-    // results: tours.length,
-    // requestedAt: req.requestTime,
-    // data: {
-    //   tours: tours, // path tours and const tours object , could write only tours
-    // },
-  });
+exports.getAllTours = async(req, res) => {
+  try {
+    const tours = await Tour.find()
+
+    res.status(200).json({
+      status: "sucsess",
+      results: tours.length,
+      data: {
+        tours // path tours and const tours object , could write only tours
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'failed request',
+      message: error
+    })
+  }
 };
-exports.getTour = (req, res) => {
-  console.log(req.params); // {id: '5'} -> example
-
-  const id = req.params.id * 1;
-  // const tour = tours.find((el) => el.id === id);
-
-  // res.status(200).json({
-  //   status: "sucsess",
-  //   data: {
-  //     tour, // path tours and const tours object , could write only tours
-  //   },
-  // });
+exports.getTour = async(req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id); //req.params.id -> router.route("/:id")
+    res.status(200).json({
+      status: "sucsess",
+      data: {
+        tour, // path tours and const tours object , could write only tours
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status:'failed request',
+      message: error
+    })
+  } 
 };
 
 exports.addTour = async (req, res) => {
