@@ -74,9 +74,17 @@ exports.updateTour = async(req, res) => {
     });
   };
 };
-exports.deleteTour = (req, res) => {
-  res.status(204).json({
-    status: "sucsess",
-    data: null,
-  });
+exports.deleteTour = async(req, res) => {
+  try {
+    await Tour.findByIdAndRemove(req.params.id)
+    res.status(204).json({
+      status: "sucsess",
+      data: null,
+    });
+  } catch (error) {
+      res.status(400).json({
+        status: 'failed request',
+        message: error
+      });
+  }
 };
