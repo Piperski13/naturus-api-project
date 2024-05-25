@@ -4,7 +4,7 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router(); //created a new router and saved it in tourRouter
 
-router.param('id',tourController.checkId);
+// router.param('id',tourController.checkId);
 
 router
   .route("/")
