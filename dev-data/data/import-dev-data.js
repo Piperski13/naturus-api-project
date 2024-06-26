@@ -44,6 +44,7 @@ const deleteData = async() =>{
   process.exit();
 }
 
+//CLI command to run the functions 
 if(process.argv[2] === '--import'){
   importData();
 }
