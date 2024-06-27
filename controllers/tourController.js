@@ -9,12 +9,20 @@ exports.getAllTours = async(req, res) => {
     const excludeFieds = ['page','sort','limit','fields'];
     excludeFieds.forEach(el => delete queryObj[el]);
 
-    // 2) Advanced Filtering (grater then equal, greater then etc. $gte, filter mongoose)
+    // 1.1) Advanced Filtering (grater then equal, greater then etc. $gte, filter mongoose)
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-    const query = Tour.find(JSON.parse(queryStr));
+    let query = Tour.find(JSON.parse(queryStr));
 
     //{ duration: { '$gte': '5' }, difficulty: 'easy' }
+
+    // 2) SORTING
+    if(req.query.sort){
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    }else{
+      query = query.sort('-createdAt');
+    }
 
     //EXECUTE QUERY
     const tours = await query;
@@ -73,7 +81,7 @@ exports.addTour = async (req, res) => {
 };
 exports.updateTour = async(req, res) => {
   try {
-    const tour = await Tour.findOneAndUpdate(req.params.id, req.body , {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body , {
       new: true, // return a new tour (updated one)
       runValidators: true  //running validators again -> example price {type:Number,required:true}
     })
